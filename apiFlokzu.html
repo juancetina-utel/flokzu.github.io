@@ -52,26 +52,64 @@
     button:hover {
       background-color: #45a049;
     }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #e9e9e9;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>Formulario de Búsqueda</h1>
+    <h1>Formulario de Búsqueda API</h1>
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Escribe algo para buscar..." />
       <button onclick="buscar()">Buscar</button>
+    </div>
+    <div id="result" class="result" style="display: none;">
+      <h3>Resultado de la API:</h3>
+      <pre id="resultContent"></pre>
     </div>
   </div>
 
   <script>
     function buscar() {
       let query = document.getElementById("searchInput").value;
+      
       if (query) {
-        alert("Buscando: " + query);
+        fetchData(query);
       } else {
         alert("Por favor, ingresa un término para buscar.");
       }
+    }
+
+    function fetchData(query) {
+      // URL de la API que proporcionaste
+      const apiUrl = `https://app.flokzu.com/flokzuopenapi/api/v2/process/instance`;
+      
+      fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'X-Api-Key': 'e3bf3bd4d3e74d253d71858503acd3100761ad5ce37',
+          'X-Username': 'juan.cetina@s4learning.com',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        // Mostrar los resultados
+        document.getElementById("result").style.display = "block";
+        document.getElementById("resultContent").textContent = JSON.stringify(data, null, 2);
+      })
+      .catch(error => {
+        alert("Hubo un error al obtener los datos de la API.");
+        console.error('Error:', error);
+      });
     }
   </script>
 
